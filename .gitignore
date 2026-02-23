@@ -1,0 +1,10 @@
+run_scFEA.sh
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Runtime outputs
+data/output/
+output/

@@ -1,4 +1,75 @@
-pandas >= 0.23.4
-numpy >= 1.15.4
-tqdm >= 4.28.1
-umap-learn >= 0.5.1
+# scFEA environment requirements
+# Python 3.10
+# Generated from conda env 'scFEA' on 2026-02-20
+# Install with: pip install -r requirements
+
+# ── Core deep learning ────────────────────────────────────────────────────────
+torch >= 2.5.1
+torchvision >= 0.20.1
+
+# ── Scientific computing ──────────────────────────────────────────────────────
+numpy >= 2.2.5
+scipy >= 1.15.3
+pandas >= 2.0.3
+scikit-learn >= 1.7.2
+numba >= 0.61.2
+numexpr >= 2.11.0
+Bottleneck >= 1.4.2
+sympy >= 1.14.0
+mpmath >= 1.3.0
+
+# ── Single-cell / MAGIC imputation ───────────────────────────────────────────
+magic-impute >= 3.0.0
+scprep >= 1.2.3
+graphtools >= 2.1.0
+PyGSP >= 0.6.1
+pynndescent >= 0.5.13
+tasklogger >= 1.2.0
+
+# ── Dimensionality reduction ──────────────────────────────────────────────────
+umap-learn >= 0.5.11
+
+# ── Plotting ──────────────────────────────────────────────────────────────────
+matplotlib >= 3.10.8
+contourpy >= 1.3.1
+cycler >= 0.12.1
+fonttools >= 4.61.0
+kiwisolver >= 1.4.9
+pillow >= 12.1.0
+pyparsing >= 3.2.5
+
+# ── Graph / network ───────────────────────────────────────────────────────────
+networkx >= 3.4.2
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+tqdm >= 4.67.3
+joblib >= 1.5.3
+decorator >= 5.2.1
+Deprecated >= 1.3.1
+future >= 1.0.0
+wrapt >= 2.1.1
+filelock >= 3.20.3
+packaging >= 25.0
+PyYAML >= 6.0.3
+six >= 1.17.0
+typing_extensions >= 4.15.0
+python-dateutil >= 2.9.0.post0
+pytz >= 2025.2
+tzdata >= 2025.3
+
+# ── Networking / HTTP ─────────────────────────────────────────────────────────
+requests >= 2.32.5
+urllib3 >= 2.6.3
+certifi >= 2026.1.4
+charset-normalizer >= 3.4.4
+idna >= 3.11
+PySocks >= 1.7.1
+brotlicffi >= 1.2.0.0
+cffi >= 2.0.0
+pycparser >= 2.23
+
+# ── Templating / misc ─────────────────────────────────────────────────────────
+Jinja2 >= 3.1.6
+MarkupSafe >= 3.0.2
+tornado >= 6.5.4
+ply >= 3.11

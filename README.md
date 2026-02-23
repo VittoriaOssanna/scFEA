@@ -80,25 +80,40 @@ Supplementary Figures:
 
 ## Requirements and Installation
 
-scFEA is implemented by Python3. If you don't have python, please download [Anaconda](https://www.anaconda.com/download/#linux) with python 3 version.
+scFEA is implemented by Python3 (≥ 3.10). If you don't have Python, please download [Anaconda](https://www.anaconda.com/download/#linux) with Python 3.
 
-- torch >= 0.4.1
-- numpy >= 1.15.4
-- pandas >= 0.23.4
-- matplotlib >=3.0.2
-- magic >= 2.0.4
+**Key dependencies:**
+- torch >= 2.5.1
+- numpy >= 2.2.5
+- pandas >= 2.0.3
+- matplotlib >= 3.10.8
+- magic-impute >= 3.0.0
+- scipy >= 1.15.3
+- scikit-learn >= 1.7.2
+
+Full dependency list is in the `requirements` file.
 
 Download scFEA:
 ```
 git clone https://github.com/changwn/scFEA
 ```
 
-Install requirements:
+Create and activate a dedicated conda environment (recommended):
+```
+conda create -n scFEA python=3.10
+conda activate scFEA
+```
+
+Install PyTorch (choose the command matching your platform from [pytorch.org](https://pytorch.org/get-started/locally/)):
+```
+# CPU-only example:
+pip install torch torchvision
+```
+
+Install all remaining requirements:
 ```
 cd scFEA
-conda install --file requirements
-conda install pytorch torchvision -c pytorch
-pip install --user magic-impute
+pip install -r requirements
 ```
 
 ## Usage
@@ -110,7 +125,10 @@ usage: scFEA.py [-h] [--data_dir <data_directory>]
                 [--input_dir <input_directory>] [--res_dir <data_directory>]
                 [--test_file TEST_FILE] [--moduleGene_file MODULEGENE_FILE]
                 [--stoichiometry_matrix STOICHIOMETRY_MATRIX]
-                [--sc_imputation {True,False}]
+                [--cName_file CNAME_FILE] [--sc_imputation {True,False}]
+                [--output_flux_file OUTPUT_FLUX_FILE]
+                [--output_balance_file OUTPUT_BALANCE_FILE]
+                [--train_epoch TRAIN_EPOCH]
 
 scFEA: A graph neural network model to estimate cell-wise metabolic flux using
 single cell RNA-seq data
@@ -118,12 +136,12 @@ single cell RNA-seq data
 optional arguments:
   -h, --help            show this help message and exit
   --data_dir <data_directory>
-                        The data directory for scFEA model files.
+                        The data directory for scFEA model files. Default: data
   --input_dir <input_directory>
-                        The data directory for single cell input data.
+                        The data directory for single cell input data. Default: input
   --res_dir <data_directory>
                         The data directory for result [output]. The output of scFEA includes two matrices, predicted metabolic flux and metabolites
-                        stress at single cell resolution.
+                        stress at single cell resolution. Default: output
   --test_file TEST_FILE
                         The test SC file [input]. The input of scFEA is a single cell profile matrix, where row is gene and column is cell. Example
                         datasets are provided in /data/ folder. The input can be raw counts or normalised counts. The logarithm would be performed
@@ -133,12 +151,20 @@ optional arguments:
                         module_gene_m168.csv which is default. All candidate moduleGene files are provided in /data/ folder.
   --stoichiometry_matrix STOICHIOMETRY_MATRIX
                         The table describes relationship between compounds and modules. Each row is an intermediate metabolite and each column is
-                        metabolic module. For human model, please use cmMat_171.csv which is default. All candidate stoichiometry matrices are
+                        metabolic module. For human model, please use cmMat_c70_m168.csv which is default. All candidate stoichiometry matrices are
                         provided in /data/ folder.
   --cName_file CNAME_FILE
                         The name of compounds. The table contains two rows. First row is compounds name and second row is corresponding id.
+                        Default: cName_c70_m168.csv
   --sc_imputation {True,False}
-                        Whether perform imputation for SC dataset (recommend set to <True> for 10x data).
+                        Whether perform imputation for SC dataset using MAGIC (recommend set to <True> for 10x data). Default: False
+  --output_flux_file OUTPUT_FLUX_FILE
+                        Custom output path for the predicted flux CSV file. If not set, the file is written to res_dir with an auto-generated name.
+  --output_balance_file OUTPUT_BALANCE_FILE
+                        Custom output path for the predicted metabolite balance CSV file. If not set, the file is written to res_dir with an
+                        auto-generated name.
+  --train_epoch TRAIN_EPOCH
+                        Number of training epochs. Default: 100
 
 
 ```

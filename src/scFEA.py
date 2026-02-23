@@ -6,6 +6,7 @@
 
 # system lib
 import argparse
+import os
 import time
 import warnings
 
@@ -85,10 +86,30 @@ def main(args):
     cName_file = args.cName_file
     fileName = args.output_flux_file
     balanceName = args.output_balance_file
+    os.makedirs(os.path.dirname(os.path.abspath(fileName)), exist_ok=True)
+    os.makedirs(os.path.dirname(os.path.abspath(balanceName)), exist_ok=True)
     EPOCH = args.train_epoch
     
     if EPOCH <= 0:
         raise NameError('EPOCH must greater than 1!')
+
+    # ── Validate inputs before doing any work ────────────────────────────────
+    errors = []
+    if not os.path.isdir(data_path):
+        errors.append(f"  --data_dir not found:           {data_path}")
+    if not os.path.isdir(input_path):
+        errors.append(f"  --input_dir not found:          {input_path}")
+    if not os.path.isfile(os.path.join(input_path, test_file)):
+        errors.append(f"  --test_file not found:          {os.path.join(input_path, test_file)}")
+    if not os.path.isfile(os.path.join(data_path, moduleGene_file)):
+        errors.append(f"  --moduleGene_file not found:    {os.path.join(data_path, moduleGene_file)}")
+    if not os.path.isfile(os.path.join(data_path, cm_file)):
+        errors.append(f"  --stoichiometry_matrix not found: {os.path.join(data_path, cm_file)}")
+    if not os.path.isfile(os.path.join(data_path, cName_file)):
+        errors.append(f"  --cName_file not found:         {os.path.join(data_path, cName_file)}")
+    if errors:
+        raise FileNotFoundError("Input validation failed — aborting before loading data:\n" + "\n".join(errors))
+    # ─────────────────────────────────────────────────────────────────────────
 
     # choose cpu or gpu automatically
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -169,7 +190,7 @@ def main(args):
         temp.loc[:, [g for g in gene_names if g not in genes]] = 0
         temp = temp.T
         temp['Module_Gene'] = ['%02d_%s' % (i,g) for g in gene_names]
-        geneExprDf = geneExprDf.append(temp, ignore_index = True, sort=False)
+        geneExprDf = pd.concat([geneExprDf, temp], ignore_index=True, sort=False)
     geneExprDf.index = geneExprDf['Module_Gene']
     geneExprDf.drop('Module_Gene', axis = 'columns', inplace = True)
     X = geneExprDf.values.T
@@ -219,6 +240,7 @@ def main(args):
     net.train()
     timestr = time.strftime("%Y%m%d-%H%M%S")
     lossName = "./output/lossValue_" + timestr + ".txt"
+    os.makedirs("./output", exist_ok=True)
     file_loss = open(lossName, "a")
     for epoch in tqdm(range(EPOCH)):
         loss, loss1, loss2, loss3, loss4 = 0,0,0,0,0
